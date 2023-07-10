@@ -9,9 +9,9 @@ def main():
     args = argparse.ArgumentParser()
     args.add_argument('-gr', '--group_name', default=None,  type=str)
     args.add_argument('-s', '--session_name', default=None,  type=str)
-    args.add_argument('-c', '--config',       default=None,  type=str)
+    args.add_argument('-c', '--config',       default='SSBSN_SIDD',  type=str)
     args.add_argument('-r', '--resume',       action='store_true')
-    args.add_argument('-g', '--gpu',          default=None,  type=str)
+    args.add_argument('-g', '--gpu',          default='0',  type=str)
     args.add_argument(      '--thread',       default=4,     type=int)
 
     args = args.parse_args()

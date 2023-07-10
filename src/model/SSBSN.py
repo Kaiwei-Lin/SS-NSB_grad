@@ -10,7 +10,7 @@ from .SSBSNl import SSBSNl
 @regist_model
 class SSBSN(nn.Module):
     def __init__(self, pd_a=5, pd_b=2, pd_pad=2, R3=True, R3_T=8, R3_p=0.16, 
-                    bsn='SSBSNl', in_ch=3, bsn_base_ch=128, bsn_num_module=9, mode='ss', f_scale=2, ss_exp_factor=1.):
+                    bsn='SSBSNl', in_ch=1, bsn_base_ch=128, bsn_num_module=9, mode='ss', f_scale=2, ss_exp_factor=1.):
         super().__init__()
 
         # network hyper-parameters
@@ -65,10 +65,10 @@ class SSBSN(nn.Module):
         b,c,h,w = x.shape
 
         # pad images for PD process
-        if h % self.pd_b != 0:
-            x = F.pad(x, (0, 0, 0, self.pd_b - h%self.pd_b), mode='constant', value=0)
-        if w % self.pd_b != 0:
-            x = F.pad(x, (0, self.pd_b - w%self.pd_b, 0, 0), mode='constant', value=0)
+        # if h % self.pd_b != 0:
+        #     x = F.pad(x, (0, 0, 0, self.pd_b - h%self.pd_b), mode='constant', value=0)
+        # if w % self.pd_b != 0:
+        #     x = F.pad(x, (0, self.pd_b - w%self.pd_b, 0, 0), mode='constant', value=0)
 
         # forward PD-BSN process with inference pd factor
         img_pd_bsn = self.forward(img=x, pd=self.pd_b)

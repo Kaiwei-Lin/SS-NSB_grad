@@ -157,7 +157,21 @@ def psnr(img1, img2):
     img2 = np.clip(img2, 0, 255)
 
     return peak_signal_noise_ratio(img1, img2, data_range=255)
+def cal_sensitivity(lr, clip, dataset_size):
+    return 2 * lr * clip / dataset_size
+def Laplace(epsilon):
+    return 1 / epsilon
+def Gaussian_Simple(epsilon, delta):
+    return np.sqrt(2 * np.log(1.25 / delta)) / epsilon
 
+def calculate_noise_scale(dp_mechanism, dp_epsilon, dp_delta, batch_size, dp_sample=1):
+    if dp_mechanism == 'Laplace':
+        epsilon_single_query = dp_epsilon
+        return Laplace(epsilon=epsilon_single_query)
+    elif dp_mechanism == 'Gaussian':
+        # epsilon_single_query = dp_epsilon / times
+        # delta_single_query = dp_delta / times
+        return Gaussian_Simple(epsilon=dp_epsilon, delta=dp_delta)
 def ssim(img1, img2):
     '''
     image value range : [0 - 255]

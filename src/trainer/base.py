@@ -357,6 +357,7 @@ class BaseTrainer():
         # test start
         psnr_sum = 0.
         ssim_sum = 0.
+        cos_sum = 0.
         count = 0
         for idx, data in enumerate(dataloader):
             # to device
@@ -371,14 +372,16 @@ class BaseTrainer():
             # add constant and floor (if floor is on)
             denoised_image += add_con
             if floor: denoised_image = torch.floor(denoised_image)
-
+            save_path = r'K:\mydata\different private gradient\FasionMNIST_grad\val\pred'
+            np.save("{}\{}.npy".format(save_path, data['idx']), denoised_image.cpu().reshape((1, 128, 128)))
             # evaluation
             if 'clean' in data:
                 psnr_value = psnr(denoised_image, data['clean'])
                 ssim_value = ssim(denoised_image, data['clean'])
-
+                cos_sim = torch.cosine_similarity(denoised_image.view(-1), data['clean'].view(-1), dim=0)
                 psnr_sum += psnr_value
                 ssim_sum += ssim_value
+                cos_sum += cos_sim
                 count += 1
 
             # image save
@@ -410,7 +413,7 @@ class BaseTrainer():
 
         # final log msg
         if count > 0:
-            self.logger.val('[%s] Done! PSNR : %.2f dB, SSIM : %.3f'%(self.status, psnr_sum/count, ssim_sum/count))
+            self.logger.val('[%s] Done! PSNR : %.2f dB, SSIM : %.3f, Cos_sim: %.4f'%(self.status, psnr_sum/count, ssim_sum/count, cos_sum/count))
         else:
             self.logger.val('[%s] Done!'%self.status)
 
